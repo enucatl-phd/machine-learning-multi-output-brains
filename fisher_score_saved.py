@@ -16,14 +16,15 @@ import numpy as np
 @click.option("--sd1",
               type=click.Path(exists=True),
               default="data/sd_1.npz")
-def main(median1, median0, sd1, sd0):
+@click.argument("output")
+def main(median1, median0, sd1, sd0, output):
     a = np.load(median1)["arr_0"]
     b = np.load(median0)["arr_0"]
     c = np.load(sd0)["arr_0"]
     d = np.load(sd1)["arr_0"]
     fisher = ((a - b) ** 2 / (c + d))
     fisher[~np.isfinite(fisher)] = 0
-    np.savez("data/fisher.npz", fisher)
+    np.savez(output, fisher)
 
 
 if __name__ == "__main__":

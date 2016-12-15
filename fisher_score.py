@@ -19,20 +19,28 @@ def main(targets, file_names):
     file_names = np.array(file_names)
     file_ids = [id_from_file_name(file_name)
                 for file_name in file_names]
-    genders = np.array([
-        targets[file_id - 1, 0]
+    feature = np.array([
+        targets[file_id - 1, :]
         for file_id in file_ids], dtype=np.bool)
-    for i in range(2):
-        gender_files = file_names[genders == i]
-        data = np.stack([
-            np.squeeze(nb.load(file_name).get_data())
-            for file_name in gender_files],
-            axis=-1
-        )
-        median = np.median(data, axis=-1)
-        sd = np.std(data, dtype=np.float32, axis=-1)
-        np.savez("data/median_{0}.npz".format(i), median)
-        np.savez("data/sd_{0}.npz".format(i), sd)
+    for f in range(3):
+        print("feature", f)
+        for i in range(2):
+            feature_files = file_names[feature[:, f] == i]
+            data = np.stack([
+                np.squeeze(nb.load(file_name).get_data())
+                for file_name in feature_files],
+                axis=-1
+            )
+            median = np.median(data, axis=-1)
+            sd = np.std(data, dtype=np.float32, axis=-1)
+            np.savez(
+                "data/median_{0}_{1}.npz".format(i, f),
+                median
+            )
+            np.savez(
+                "data/sd_{0}_{1}.npz".format(i, f),
+                sd
+            )
 
 if __name__ == "__main__":
     main()

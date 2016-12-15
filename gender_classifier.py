@@ -20,7 +20,8 @@ from healthybrains.inputoutput import id_from_file_name
     default="data/mlp3-targets.csv")
 @click.argument(
     "file_names",
-    nargs=-1)
+    nargs=-1,
+    type=click.Path(exists=True))
 def main(fisher, targets, file_names):
     targets = np.genfromtxt(targets, delimiter=",")
     fisher = np.load(fisher)["arr_0"]
